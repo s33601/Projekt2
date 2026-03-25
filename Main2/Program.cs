@@ -158,7 +158,7 @@ internal class Program
                     {
                     Console.WriteLine(item);
                     }
-                Console.WriteLine("-----------------------\n");
+                Console.WriteLine("-----------------------");
             }
 
         }
