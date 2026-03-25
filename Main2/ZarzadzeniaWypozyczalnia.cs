@@ -152,4 +152,99 @@ public class ZarzadzeniaWypozyczalnia
 
         return "Sprzet o takim ID nie jest w naprawie";
     }
+     public List<string> wyswyietlanieCalejlisty()
+    {
+        List<string> raport = new List<string>();
+        foreach(Sprzet sprzet in listaSprzetu){
+            string informacje = "Sprzet ID: " +sprzet.ID +" | Stan: " + sprzet.statusDostepnosci;
+            if (sprzet.statusDostepnosci == EDostepnosc.WYPOZYCZONE)
+            {
+                foreach(Wypozyczenia w in listaWypozyczen)
+                {
+                    if (sprzet.ID == w.sprzet.ID && w.kiedyOddany == null)
+                    {
+                       informacje += " | Osoba wypozyczajaca: " + w.osoba.ID + " | Od: " + w.odkiedy.ToString("dd.MM.yyyy") + " | Do: " + w.doKiedy.ToString("dd.MM.yyyy");
+                        break;
+                    }
+                }
+                
+            }
+            raport.Add(informacje);
+        }
+        return raport;
+
+    }
+
+    public List<string> wyswietlanieDOSTEPNYCH()
+    {
+        List<string> raport = new List<string>();
+        
+        foreach (Sprzet sprzet in listaSprzetu)
+        {
+            if (sprzet.statusDostepnosci == EDostepnosc.DOSTEPNE)
+            {
+                string typSprzetu = sprzet.GetType().Name;
+                string informacje = "Sprzet: " + typSprzetu +" | Id sprzetu: " + sprzet.ID + " | Status: " + sprzet.statusDostepnosci;
+                
+                 raport.Add(informacje);
+            }
+           
+
+        }
+        return raport;
+    }
+    
+    public List<string> wyswietelnieWYPOZYCZONYCH()
+    {
+        List<string> raport = new List<string>();
+        foreach(Sprzet sprzet in listaSprzetu){
+            
+            if (sprzet.statusDostepnosci == EDostepnosc.WYPOZYCZONE)
+            {
+                foreach(Wypozyczenia w in listaWypozyczen)
+                {
+                    if (sprzet.ID == w.sprzet.ID && w.kiedyOddany == null)
+                    {
+                        string typSprzetu = sprzet.GetType().Name;
+                        string informacje = "Sprzet: " + typSprzetu + " | Id sprzetu: " +sprzet.ID + " | Osoba wypozyczajaca: " + w.osoba.ID + " | Od: " + w.odkiedy.ToString("dd.MM.yyyy") + " | Do: " + w.doKiedy.ToString("dd.MM.yyyy");
+
+                        if (DateTime.Now > w.doKiedy)
+                        {
+                            TimeSpan ts = DateTime.Now - w.doKiedy;
+                            informacje += " | Termin minal: " + ts.Days + " dni temu";
+                        }
+                        else
+                        {
+                            informacje += " | Termin oddania: " + w.doKiedy.ToString("dd.MM.yyyy");
+                        }
+                        
+                        raport.Add(informacje);
+                        break;
+                    }
+
+                }
+            }
+        }
+        return raport;
+    }
+    
+    public List<string> wyswietlanieNAPRAWA()
+    {
+        List<string> raport = new List<string>();
+        
+        foreach (Sprzet sprzet in listaSprzetu)
+        {
+            if (sprzet.statusDostepnosci == EDostepnosc.NAPRAWA)
+            {
+                string typSprzetu = sprzet.GetType().Name;
+                string informacje = "Sprzet: " + typSprzetu +" | Id sprzetu: " + sprzet.ID + " | Status: " + sprzet.statusDostepnosci;
+                
+                raport.Add(informacje);
+            }
+           
+
+        }
+        return raport;
+    }
+    
 }
