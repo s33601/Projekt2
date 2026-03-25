@@ -247,4 +247,66 @@ public class ZarzadzeniaWypozyczalnia
         return raport;
     }
     
+      public List<string> wyswietlWypozyczeniaDanegoID(int OsobaID)
+    {
+        List<string> raport = new List<string>();
+        foreach (Sprzet sprzet in listaSprzetu)
+        {
+
+
+            foreach (Wypozyczenia w in listaWypozyczen)
+            {
+                if (sprzet.ID == w.sprzet.ID && w.kiedyOddany == null && w.osoba.ID == OsobaID)
+                {
+                    string typSprzetu = sprzet.GetType().Name;
+                    string informacje = "Sprzet: " + typSprzetu + " | Id sprzetu: " + sprzet.ID +
+                                        " | Osoba wypozyczajaca: " + w.osoba.ID + " | Od: " +
+                                        w.odkiedy.ToString("dd.MM.yyyy") + " | Do: " + w.doKiedy.ToString("dd.MM.yyyy");
+
+                    if (DateTime.Now > w.doKiedy)
+                    {
+                        TimeSpan ts = DateTime.Now - w.doKiedy;
+                        informacje += " | Termin minal: " + ts.Days + " dni temu";
+                    }
+                    else
+                    {
+                        informacje += " | Termin oddania: " + w.doKiedy.ToString("dd.MM.yyyy");
+                    }
+
+                    raport.Add(informacje);
+
+                }
+            }
+        }
+
+        if (raport.Count == 0)
+                {
+                    raport.Add("Brak aktywnych wypozyczen");
+                }
+     return raport;
+        }
+
+    public List<string> wyswietlListeZALEGAJACYCHzeZwrotem()
+    {
+        List<string> raport = new List<string>();
+        foreach (Wypozyczenia w in listaWypozyczen)
+        {
+            if (w.kiedyOddany == null && DateTime.Now > w.doKiedy)
+            {
+                TimeSpan ts = DateTime.Now - w.doKiedy;
+                string informacje = "Osoba o id: " + w.osoba.ID + " zalega z przedmiotem o id: " + w.sprzet.ID +
+                                    " od " + ts.Days + " dni";
+                raport.Add(informacje);
+
+            }
+            
+        }
+         if (raport.Count == 0)
+                    {
+                        raport.Add("Brak zaleglych zwrotow ");
+                    }
+        return raport;
+    }
+
+    
 }
